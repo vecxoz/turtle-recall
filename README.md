@@ -99,7 +99,8 @@ Demo
 ====
 
 The following example `solution/notebook/notebook.ipynb` demonstrates
-how to infer any single image using pretrained weights.
+how to download pretrained weights and infer any single image.
+Leaderboard score of this model is 0.9214 (EffNet-B7, single fold).
 
 
 Steps to reproduce
@@ -109,7 +110,8 @@ Steps to reproduce
 # Install
 
 cd $HOME
-unzip solution.zip
+git clone https://github.com/vecxoz/turtle-recall
+mv turtle-recall solution
 conda create -y --name py397 python=3.9.7
 conda activate py397
 pip install tensorflow==2.8.0 tensorflow-addons numpy pandas \
@@ -117,6 +119,7 @@ scikit-learn h5py efficientnet keras-cv-attention-models cloud-tpu-client
 
 # Prepare data
 
+mkdir -p $HOME/solution/data
 cd $HOME/solution/data
 
 curl -L -O https://storage.googleapis.com/dm-turtle-recall/train.csv
@@ -141,6 +144,8 @@ python3 create_tfrecords.py --data_dir=$HOME/solution/data --out_dir=$HOME/solut
 # and adjust batch size and learning rate accordingly.
 # To use mixed precision set:
 # --mixed_precision=mixed_float16
+# Note. If the target system runs out of RAM you can disable data caching.
+# Use argument `cache=False` in calls to `init_tfdata` function in each `run.py` file.
 
 bash run_training.sh
 
